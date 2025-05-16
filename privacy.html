@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隐私政策 - 夜喵影视</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="policy-header">
+            <a href="index.html" class="back-button">← 返回首页</a>
+            <h1>隐私政策</h1>
+        </header>
+        
+        <main class="policy-content glass-effect">
+            <section>
+                <h2>1. 信息收集</h2>
+                <p>我们可能收集的信息包括：</p>
+                <ul>
+                    <li>基本用户信息（用户名、邮箱等）</li>
+                    <li>设备信息</li>
+                    <li>使用记录</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>2. 信息使用</h2>
+                <p>我们收集的信息将用于：</p>
+                <ul>
+                    <li>提供和改进服务</li>
+                    <li>个性化用户体验</li>
+                    <li>发送服务通知</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>3. 信息保护</h2>
+                <p>我们采取多种安全措施保护您的个人信息：</p>
+                <ul>
+                    <li>数据加密存储</li>
+                    <li>访问控制</li>
+                    <li>定期安全审计</li>
+                </ul>
+            </section>
+        </main>
+
+        <footer class="policy-footer">
+            <p style="font-weight: bold;">© 2025 夜喵影视. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // 主题切换功能
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        const currentTheme = localStorage.getItem('theme');
+        
+        if (currentTheme == 'dark') {
+            document.body.classList.toggle('dark-theme');
+        } else if (currentTheme == 'light') {
+            document.body.classList.toggle('light-theme');
+        }
+    </script>
+</body>
+</html> 

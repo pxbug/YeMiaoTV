@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>夜喵影视 - 管理后台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('../img/1.ttf') format('truetype');
+            font-display: swap;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'CustomFont', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header img {
+            width: 40px;
+            height: 40px;
+            margin-right: 1rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .nav-item {
+            margin: 0;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: #4a90e2;
+            color: white;
+        }
+
+        .nav-link i {
+            margin-right: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .logout-btn {
+            padding: 1rem;
+            border-top: 1px solid #eee;
+            background: white;
+            flex-shrink: 0;
+            margin-top: auto;
+        }
+
+        .logout-btn a {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            color: #dc3545;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .content-header {
+            margin-bottom: 2rem;
+        }
+
+        .content-header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: #333;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            border-color: #4a90e2;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #4a90e2;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #357abd;
+        }
+
+        .mobile-toggle {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: #333;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                padding: 0;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding-top: 4rem;
+            }
+
+            .mobile-toggle {
+                display: block;
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                z-index: 1001;
+                background: white;
+                border: none;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .sidebar-header {
+                padding-top: 3rem;
+            }
+
+            .nav-menu {
+                padding: 1rem 0;
+            }
+
+            .nav-link {
+                padding: 0.8rem 1rem;
+            }
+
+            .logout-btn {
+                padding: 1rem;
+                position: sticky;
+                bottom: 0;
+                width: 100%;
+                box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            }
+        }
+
+        /* 添加新的样式 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stats-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stats-value {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .stats-value input {
+            width: 100px;
+            text-align: center;
+        }
+
+        .stats-suffix {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .partner-list {
+            display: grid;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .partner-item {
+            border: 1px solid #eee;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .current-logo {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .current-logo img {
+            max-height: 100px;
+            width: auto;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 弹窗样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .modal {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: 400px;
+            position: relative;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .modal.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1rem;
+        }
+
+        .modal-icon.success {
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+
+        .modal-icon.error {
+            background: #ffebee;
+            color: #f44336;
+        }
+
+        .modal-icon.info {
+            background: #e3f2fd;
+            color: #2196f3;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .modal-content {
+            margin-bottom: 1.5rem;
+            color: #666;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.8rem;
+        }
+
+        .modal-btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-btn.primary {
+            background: #4a90e2;
+            color: white;
+        }
+
+        .modal-btn.primary:hover {
+            background: #357abd;
+        }
+
+        .modal-btn.secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .modal-btn.secondary:hover {
+            background: #e0e0e0;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal {
+                width: 85%;
+                padding: 1.5rem;
+            }
+
+            .modal-title {
+                font-size: 1.1rem;
+            }
+
+            .modal-btn {
+                padding: 0.5rem 1rem;
+            }
+        }
+
+        /* 密码修改表单样式 */
+        .password-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- 添加登录检测 -->
+    <script>
+        // 检查登录状态
+        function checkLogin() {
+            const isLoggedIn = localStorage.getItem('adminLoggedIn');
+            if (!isLoggedIn) {
+                window.location.href = 'login.html';
+            }
+        }
+        
+        // 页面加载时检查登录状态
+        checkLogin();
+    </script>
+
+    <button class="mobile-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="../img/logo.PNG" alt="夜喵影视">
+            <h2>管理后台</h2>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#" class="nav-link active" data-section="basic">
+                    <i class="fas fa-home"></i>
+                    基本设置
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-section="download">
+                    <i class="fas fa-download"></i>
+                    下载链接
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-section="stats">
+                    <i class="fas fa-chart-bar"></i>
+                    数据统计
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-section="friendlinks">
+                    <i class="fas fa-link"></i>
+                    友情链接
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-section="partner">
+                    <i class="fas fa-handshake"></i>
+                    合作伙伴
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-section="password">
+                    <i class="fas fa-key"></i>
+                    修改密码
+                </a>
+            </li>
+        </ul>
+        <div class="logout-btn">
+            <a href="#" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                退出登录
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="content-header">
+            <h1>基本设置</h1>
+        </div>
+        
+        <!-- 基本设置 -->
+        <div class="card section-content" id="basic-section">
+            <form id="basicForm">
+                <div class="form-group">
+                    <label for="website-title">网站标题</label>
+                    <input type="text" id="website-title" class="form-control" value="夜喵影视" placeholder="请输入网站标题">
+                </div>
+                <div class="form-group">
+                    <label for="website-desc">网站描述</label>
+                    <textarea id="website-desc" class="form-control" rows="3" placeholder="请输入网站描述">海量影视资源，随时随地尽情观看</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="logo-upload">Logo上传</label>
+                    <input type="file" id="logo-upload" class="form-control" accept="image/*" title="选择要上传的Logo图片">
+                </div>
+                <button type="submit" class="btn btn-primary">保存更改</button>
+            </form>
+        </div>
+
+        <!-- 下载链接 -->
+        <div class="card section-content" id="download-section" style="display: none;">
+            <form id="downloadForm">
+                <div class="form-group">
+                    <label for="android-link">安卓下载链接</label>
+                    <input type="url" id="android-link" class="form-control" placeholder="请输入安卓版本下载链接">
+                </div>
+                <div class="form-group">
+                    <label for="ios-link">iOS下载链接</label>
+                    <input type="url" id="ios-link" class="form-control" placeholder="请输入iOS版本下载链接">
+                </div>
+                <div class="form-group">
+                    <label for="android-version">安卓版本号</label>
+                    <input type="text" id="android-version" class="form-control" placeholder="例如: 1.0.0">
+                </div>
+                <div class="form-group">
+                    <label for="ios-version">iOS版本号</label>
+                    <input type="text" id="ios-version" class="form-control" placeholder="例如: 1.0.0">
+                </div>
+                <button type="submit" class="btn btn-primary">保存下载链接</button>
+            </form>
+        </div>
+
+        <!-- 数据统计 -->
+        <div class="card section-content" id="stats-section" style="display: none;">
+            <div class="stats-grid">
+                <div class="stats-card">
+                    <h3>总下载量</h3>
+                    <div class="stats-value">
+                        <input type="number" id="total-downloads" class="form-control" value="999">
+                        <span class="stats-suffix">+</span>
+                    </div>
+                </div>
+                <div class="stats-card">
+                    <h3>用户评分</h3>
+                    <div class="stats-value">
+                        <input type="number" id="user-rating" class="form-control" value="4.9" step="0.1" min="0" max="5">
+                    </div>
+                </div>
+                <div class="stats-card">
+                    <h3>日活用户</h3>
+                    <div class="stats-value">
+                        <input type="number" id="daily-users" class="form-control" value="99">
+                        <span class="stats-suffix">+</span>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="saveStats()">更新统计数据</button>
+        </div>
+
+        <!-- 友情链接 -->
+        <div class="card section-content" id="friendlinks-section" style="display: none;">
+            <div class="friend-links-list">
+                <div class="friend-link-item">
+                    <div class="form-group">
+                        <label for="link1-name">链接1名称</label>
+                        <input type="text" id="link1-name" class="form-control" value="星云Home" placeholder="请输入链接名称">
+                    </div>
+                    <div class="form-group">
+                        <label for="link1-url">链接1地址</label>
+                        <input type="url" id="link1-url" class="form-control" value="https://pxxox.com" placeholder="请输入链接地址">
+                    </div>
+                </div>
+                <div class="friend-link-item">
+                    <div class="form-group">
+                        <label for="link2-name">链接2名称</label>
+                        <input type="text" id="link2-name" class="form-control" value="星云博客" placeholder="请输入链接名称">
+                    </div>
+                    <div class="form-group">
+                        <label for="link2-url">链接2地址</label>
+                        <input type="url" id="link2-url" class="form-control" value="https://www.pxxox.com" placeholder="请输入链接地址">
+                    </div>
+                </div>
+                <div class="friend-link-item">
+                    <div class="form-group">
+                        <label for="link3-name">链接3名称</label>
+                        <input type="text" id="link3-name" class="form-control" value="IOS工具箱" placeholder="请输入链接名称">
+                    </div>
+                    <div class="form-group">
+                        <label for="link3-url">链接3地址</label>
+                        <input type="url" id="link3-url" class="form-control" value="https://www.pxxox.com" placeholder="请输入链接地址">
+                    </div>
+                </div>
+                <div class="friend-link-item">
+                    <div class="form-group">
+                        <label for="link4-name">链接4名称</label>
+                        <input type="text" id="link4-name" class="form-control" value="夜喵影视" placeholder="请输入链接名称">
+                    </div>
+                    <div class="form-group">
+                        <label for="link4-url">链接4地址</label>
+                        <input type="url" id="link4-url" class="form-control" value="https://www.cms.top" placeholder="请输入链接地址">
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="saveFriendLinks()">保存友情链接</button>
+        </div>
+
+        <!-- 合作伙伴 -->
+        <div class="card section-content" id="partner-section" style="display: none;">
+            <div class="partner-list">
+                <div class="partner-item">
+                    <div class="form-group">
+                        <label for="partner1-name">合作伙伴1名称</label>
+                        <input type="text" id="partner1-name" class="form-control" value="云智科技" placeholder="请输入合作伙伴名称">
+                    </div>
+                    <div class="form-group">
+                        <label for="partner1-logo">Logo上传</label>
+                        <input type="file" id="partner1-logo" class="form-control partner-logo-input" accept="image/*" title="选择要上传的Logo图片">
+                    </div>
+                    <div class="current-logo">
+                        <img src="../img/yzkj.jpeg" alt="当前Logo" id="partner1-preview" style="max-width: 200px;">
+                    </div>
+                </div>
+                <div class="partner-item">
+                    <div class="form-group">
+                        <label for="partner2-name">合作伙伴2名称</label>
+                        <input type="text" id="partner2-name" class="form-control" value="CIBC" placeholder="请输入合作伙伴名称">
+                    </div>
+                    <div class="form-group">
+                        <label for="partner2-logo">Logo上传</label>
+                        <input type="file" id="partner2-logo" class="form-control partner-logo-input" accept="image/*" title="选择要上传的Logo图片">
+                    </div>
+                    <div class="current-logo">
+                        <img src="../img/cibc.jpeg" alt="当前Logo" id="partner2-preview" style="max-width: 200px;">
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="savePartners()">保存合作伙伴</button>
+        </div>
+
+        <!-- 添加密码修改部分 -->
+        <div class="card section-content" id="password-section" style="display: none;">
+            <form id="passwordForm" class="password-form">
+                <div class="form-group">
+                    <label for="old-password">当前密码</label>
+                    <input type="password" id="old-password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="new-password">新密码</label>
+                    <input type="password" id="new-password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">确认新密码</label>
+                    <input type="password" id="confirm-password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">修改密码</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 添加弹窗组件 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modal">
+            <div class="modal-header">
+                <div class="modal-icon success">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h3 class="modal-title">操作成功</h3>
+            </div>
+            <div class="modal-content" id="modalContent">
+                设置已成功保存
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn secondary" onclick="closeModal()">取消</button>
+                <button class="modal-btn primary" onclick="closeModal()">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 修改移动端菜单切换逻辑
+        document.getElementById('sidebarToggle').addEventListener('click', function(e) {
+            e.stopPropagation(); // 阻止事件冒泡
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        });
+
+        // 点击侧边栏外部时关闭侧边栏
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.getElementById('sidebarToggle');
+            
+            if (!sidebar.contains(e.target) && !toggle.contains(e.target) && window.innerWidth <= 768) {
+                sidebar.classList.remove('active');
+            }
+        });
+
+        // 阻止侧边栏内部点击事件冒泡
+        document.getElementById('sidebar').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // 导航菜单切换
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                // 更新活动状态
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                
+                // 更新标题
+                document.querySelector('.content-header h1').textContent = this.textContent.trim();
+                
+                // 切换内容区域
+                const section = this.dataset.section;
+                document.querySelectorAll('.section-content').forEach(content => {
+                    content.style.display = 'none';
+                });
+                document.getElementById(section + '-section').style.display = 'block';
+            });
+        });
+
+        // 保存设置到本地存储
+        function saveSettings(key, data) {
+            try {
+                const settings = JSON.parse(localStorage.getItem('siteSettings') || '{}');
+                if (typeof key === 'string') {
+                    settings[key] = data;
+                } else if (typeof key === 'object') {
+                    Object.assign(settings, key);
+                }
+                localStorage.setItem('siteSettings', JSON.stringify(settings));
+                console.log('保存的数据:', settings); // 调试日志
+            } catch (error) {
+                console.error('保存设置失败:', error);
+                showModal('保存失败', '设置保存时出现错误', 'error');
+            }
+        }
+
+        // 加载设置
+        function loadAdminSettings() {
+            const settings = JSON.parse(localStorage.getItem('siteSettings') || '{}');
+            
+            // 基本设置
+            if (settings.title) {
+                document.getElementById('website-title').value = settings.title;
+            }
+            if (settings.description) {
+                document.getElementById('website-desc').value = settings.description;
+            }
+
+            // 下载链接
+            if (settings.androidLink) {
+                document.getElementById('android-link').value = settings.androidLink;
+            }
+            if (settings.iosLink) {
+                document.getElementById('ios-link').value = settings.iosLink;
+            }
+            if (settings.androidVersion) {
+                document.getElementById('android-version').value = settings.androidVersion;
+            }
+            if (settings.iosVersion) {
+                document.getElementById('ios-version').value = settings.iosVersion;
+            }
+
+            // 统计数据
+            const stats = settings.stats || {};
+            if (stats.totalDownloads) {
+                document.getElementById('total-downloads').value = stats.totalDownloads;
+            }
+            if (stats.userRating) {
+                document.getElementById('user-rating').value = stats.userRating;
+            }
+            if (stats.dailyUsers) {
+                document.getElementById('daily-users').value = stats.dailyUsers;
+            }
+
+            // 加载友情链接
+            const friendLinks = settings.friendLinks || [];
+            friendLinks.forEach((link, index) => {
+                if (document.getElementById(`link${index + 1}-name`)) {
+                    document.getElementById(`link${index + 1}-name`).value = link.name || '';
+                    document.getElementById(`link${index + 1}-url`).value = link.url || '';
+                }
+            });
+
+            // 加载合作伙伴信息
+            const partners = settings.partners || [];
+            partners.forEach((partner, index) => {
+                const nameInput = document.getElementById(`partner${index + 1}-name`);
+                const previewImg = document.getElementById(`partner${index + 1}-preview`);
+                
+                if (nameInput && partner.name) {
+                    nameInput.value = partner.name;
+                }
+                if (previewImg && partner.logo) {
+                    previewImg.src = partner.logo;
+                }
+            });
+        }
+
+        // 页面加载时初始化数据
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查登录状态
+            checkLogin();
+            
+            // 加载其他设置
+            loadAdminSettings();
+        });
+
+        // 更新表单提交处理
+        document.getElementById('basicForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const data = {
+                title: document.getElementById('website-title').value,
+                description: document.getElementById('website-desc').value
+            };
+            saveSettings(data);
+            showModal('保存成功', '基本设置已更新');
+        });
+
+        document.getElementById('downloadForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const data = {
+                androidLink: document.getElementById('android-link').value,
+                iosLink: document.getElementById('ios-link').value,
+                androidVersion: document.getElementById('android-version').value,
+                iosVersion: document.getElementById('ios-version').value
+            };
+            saveSettings(data);
+            showModal('保存成功', '下载链接已更新');
+        });
+
+        document.getElementById('friendlinks-section')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const data = {
+                friendLinks: [
+                    { name: document.getElementById('link1-name').value, url: document.getElementById('link1-url').value },
+                    { name: document.getElementById('link2-name').value, url: document.getElementById('link2-url').value },
+                    { name: document.getElementById('link3-name').value, url: document.getElementById('link3-url').value },
+                    { name: document.getElementById('link4-name').value, url: document.getElementById('link4-url').value }
+                ]
+            };
+            saveSettings(data);
+            showModal('保存成功', '友情链接已更新');
+        });
+
+        function saveStats() {
+            const data = {
+                stats: {
+                    totalDownloads: document.getElementById('total-downloads').value,
+                    userRating: document.getElementById('user-rating').value,
+                    dailyUsers: document.getElementById('daily-users').value
+                }
+            };
+            saveSettings(data);
+            showModal('保存成功', '统计数据已更新');
+        }
+
+        function savePartners() {
+            const partners = [];
+            document.querySelectorAll('.partner-item').forEach((item, index) => {
+                const nameInput = document.getElementById(`partner${index + 1}-name`);
+                const previewImg = document.getElementById(`partner${index + 1}-preview`);
+                
+                if (nameInput && previewImg) {
+                    partners.push({
+                        name: nameInput.value,
+                        logo: previewImg.src
+                    });
+                }
+            });
+            
+            saveSettings({ partners });
+            showModal('保存成功', '合作伙伴信息已更新');
+        }
+
+        // 图片预览功能
+        function setupImagePreview(inputId, imgElement) {
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            imgElement.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        }
+
+        // 初始化所有图片预览
+        document.querySelectorAll('.partner-logo-input').forEach((input, index) => {
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const previewImg = document.getElementById(`partner${index + 1}-preview`);
+                        if (previewImg) {
+                            previewImg.src = e.target.result;
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        // 弹窗功能
+        function showModal(title, message, type = 'success') {
+            const modal = document.getElementById('modal');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalIcon = modal.querySelector('.modal-icon');
+            const modalTitle = modal.querySelector('.modal-title');
+            const modalContent = document.getElementById('modalContent');
+
+            // 设置图标和颜色
+            modalIcon.className = 'modal-icon ' + type;
+            modalIcon.innerHTML = type === 'success' ? '<i class="fas fa-check"></i>' :
+                                type === 'error' ? '<i class="fas fa-times"></i>' :
+                                '<i class="fas fa-info"></i>';
+
+            // 设置标题和内容
+            modalTitle.textContent = title;
+            modalContent.textContent = message;
+
+            // 显示弹窗
+            modalOverlay.style.display = 'flex';
+            setTimeout(() => {
+                modal.classList.add('active');
+            }, 10);
+
+            // 点击遮罩层关闭
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    closeModal();
+                }
+            });
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            const modalOverlay = document.getElementById('modalOverlay');
+            
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modalOverlay.style.display = 'none';
+            }, 300);
+        }
+
+        // 添加键盘事件支持
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // 添加友情链接保存功能
+        function saveFriendLinks() {
+            const friendLinks = [];
+            document.querySelectorAll('.friend-link-item').forEach((item, index) => {
+                friendLinks.push({
+                    name: document.getElementById(`link${index + 1}-name`).value,
+                    url: document.getElementById(`link${index + 1}-url`).value
+                });
+            });
+            saveSettings({ friendLinks });
+            showModal('保存成功', '友情链接已更新');
+        }
+
+        // 添加密码修改功能
+        document.getElementById('passwordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const oldPassword = document.getElementById('old-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            // 从本地存储获取当前密码
+            const currentPassword = localStorage.getItem('adminPassword');
+
+            if (oldPassword !== currentPassword) {
+                showModal('错误', '当前密码输入错误', 'error');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                showModal('错误', '两次输入的新密码不一致', 'error');
+                return;
+            }
+
+            // 保存新密码
+            localStorage.setItem('adminPassword', newPassword);
+            showModal('成功', '密码修改成功');
+
+            // 清空表单
+            this.reset();
+        });
+
+        // 添加退出登录功能
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html> 

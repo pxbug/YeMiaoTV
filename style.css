@@ -1,0 +1,99 @@
+/* 政策页面样式 */
+.policy-header {
+    text-align: center;
+    padding: 40px 20px;
+    position: relative;
+}
+
+.policy-content {
+    max-width: 800px;
+    margin: 0 auto 40px;
+    padding: 30px;
+    line-height: 1.8;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.policy-content section {
+    margin-bottom: 40px;
+    text-align: left;
+}
+
+.policy-content h2 {
+    color: var(--text-color-dark);
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
+.policy-content ul {
+    padding-left: 25px;
+}
+
+.policy-content li {
+    margin-bottom: 15px;
+}
+
+.policy-content p {
+    margin-bottom: 15px;
+}
+
+.back-button {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    padding: 10px 20px;
+    color: var(--text-color-dark);
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.policy-footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+}
+
+/* 玻璃效果 */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* 适配浅色主题 */
+.light-theme .policy-content {
+    background: rgba(255, 255, 255, 0.8);
+    color: #333;
+}
+
+.light-theme .back-button {
+    background: rgba(255, 255, 255, 0.8);
+    color: #333;
+}
+
+.light-theme .policy-content h2 {
+    color: #333;
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+    .policy-content {
+        margin: 20px;
+        padding: 20px;
+    }
+    
+    .policy-header h1 {
+        font-size: 1.8em;
+    }
+} 
