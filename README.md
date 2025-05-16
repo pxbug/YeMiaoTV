@@ -101,8 +101,8 @@ python -m http.server 8000
 
 如果您有任何问题或建议，请通过以下方式联系我们：
 
-- 官方网站：[https://www.cms.top](https://www.cms.top)
-- 电子邮件：support@cms.top
+- 官方网站：[https://pxxox.com](https://pxxox.com)
+- 电子邮件：pxxox@qq.com
 
 ## 🙏 鸣谢
 
